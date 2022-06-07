@@ -1,0 +1,33 @@
+@media print {
+.box-text {
+    font-size: 17px !important; 
+    color: white !important;
+	background-color: #a90c2b !important;
+    -webkit-print-color-adjust: exact !important;
+}
+	
+@page { 
+        margin-top: 0; 
+        margin-bottom: 0; 
+    } 
+
+body {
+  -webkit-print-color-adjust: exact !important;
+   padding-top: 72px; 
+   padding-bottom: 72px; 
+}
+
+
+table {
+border: 2px solid #dee2e6 !important;
+}
+
+td {
+border: 2px solid #dee2e6 !important;
+}
+
+th {
+border: 2px solid #dee2e6 !important;
+}
+
+}

@@ -1,0 +1,437 @@
+.login-header {
+    font-size: 18px;
+    font-style: normal;
+    color: #12699f;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro",
+        "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+}
+.login-title {
+    font-size: 16px;
+    font-style: normal;
+    background-color: #12699f;
+    color: white;
+    border-color: white;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro",
+        "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+}
+.login-content {
+    font-size: 15px;
+    font-style: normal;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro",
+        "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+}
+.login-content-4 {
+    font-size: 22px;
+    font-style: normal;
+    font-family: "Trebuchet MS";
+}
+.login-content-5 {
+    font-size: 15px;
+    font-style: normal;
+    font-family: "Trebuchet MS";
+}
+.login-btn {
+    font-size: 17px;
+    font-weight: bold;
+    color: white;
+    border-color: white;
+    font-family: "Trebuchet MS";
+}
+
+.dash-header {
+    font-size: 21px;
+    font-style: normal;
+    font-family: "Trebuchet MS";
+    font-weight: bold;
+}
+
+.dash-bg {
+    background-color: #67463c;
+    color: white;
+}
+
+.img-center {
+    text-align: center;
+}
+
+.divider_custom {
+    border-color: white !important;
+}
+
+.divider_custom_2 {
+    margin-top: 16px !important;
+    height: 25px !important;
+    border-color: white !important;
+}
+
+.sidemenu {
+    font-size: 17px;
+    font-weight: bold;
+    font-family: "Trebuchet MS";
+    color: white !important;
+}
+
+.sidemenu-img {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.card-tt {
+    font-size: 17px;
+    font-family: "Trebuchet MS";
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #ffff;
+}
+
+.card-tt-col {
+    color: #ffff;
+}
+
+.nt {
+    font-size: 15px;
+    font-style: normal;
+    font-family: "Trebuchet MS";
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.v-text-field__details {
+    display: flex;
+    flex: 1 0 auto;
+    max-width: 100%;
+    min-height: 14px;
+    overflow: hidden;
+}
+
+.v-messages {
+    flex: 1 1 auto;
+    font-size: 12px;
+    min-height: 14px;
+    min-width: 1px;
+    position: relative;
+}
+
+.v-input__control2 {
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+    width: 100%;
+}
+
+.v-stepper {
+    box-shadow: none;
+}
+
+.last {
+    opacity: 0.5;
+}
+
+.spacerc {
+    padding-right: 10px;
+}
+
+.profile-img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.icon {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    background: #e2e2e2;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    color: #0000ff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.manage-project {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+}
+
+.remarks-font {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+    font-style: "justify";
+}
+
+.card-heading {
+    font-family: "Trebuchet MS";
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.table-heading {
+    font-family: "Trebuchet MS";
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.table-content {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+}
+
+.title-1 {
+    font-family: "Trebuchet MS";
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.title-2 {
+    font-family: "Trebuchet MS";
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.title-3 {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+}
+
+.title-3-bg {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+    background-color: #20778b;
+    color: white !important;
+}
+
+.title-4 {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.title-5 {
+    font-family: "Trebuchet MS";
+    font-size: 17px;
+    color: #565656 !important;
+}
+
+.title-11 {
+    font-family: "Trebuchet MS" !important;
+    font-size: 14px !important;
+    text-align: justify;
+    background-color: #20778b;
+    color: white !important;
+}
+
+.title-12 {
+    font-family: "Trebuchet MS";
+    font-size: 55px !important;
+    font-weight: bold;
+    color: white !important;
+}
+
+.title-15 {
+    font-family: "Trebuchet MS";
+    font-size: 18px;
+    color: #565656 !important;
+}
+
+.title-16 {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+    color: #565656 !important;
+}
+
+.title-17 {
+    font-family: "Trebuchet MS";
+    font-size: 17px;
+    color: white !important;
+}
+
+.title-22 {
+    font-family: "Trebuchet MS";
+    font-size: 30px;
+    color: #565656 !important;
+}
+
+.checkbx {
+    background-color: gainsboro;
+}
+
+.stylecard {
+    background-color: #20778b;
+    color: white;
+    font-family: "Trebuchet MS";
+    font-size: 35px;
+    text-transform: capitalize;
+}
+
+.btn-text {
+    font-family: "Trebuchet MS";
+    font-weight: bold;
+    color: white;
+}
+
+.title-forgot {
+    font-family: "Trebuchet MS";
+    font-size: 15px;
+    color: #565656 !important;
+}
+
+.image {
+    width: 200px;
+    height: 100px;
+    background-size: contain;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 9px;
+}
+
+.activeh:hover {
+    background-color: #565656;
+    color: black !important;
+}
+
+.activecl{
+    background-color: #000;
+    color: white !important;
+}
+
+.v-list-item--dense .v-list-item__title,
+.v-list-item--dense .v-list-item__subtitle,
+.v-list--dense .v-list-item .v-list-item__title,
+.v-list--dense .v-list-item .v-list-item__subtitle {
+    line-height: 1rem;
+    font-size: 17px;
+    font-family: "Trebuchet MS";
+    color: gray;
+    font-weight: bold;
+}
+
+.box {
+    background: white;
+    margin: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.box:hover {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    animation-name: example;
+    animation-duration: 0.25s;
+    border-left: 8px solid #12699f;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+@keyframes example {
+    0% {
+        border-left: 2px solid #ffffff;
+    }
+    25% {
+        border-left: 3px solid #ffe6e6;
+    }
+    50% {
+        border-left: 6px solid #12699f;
+    }
+    100% {
+        border-left: 6px solid #12699f;
+    }
+}
+
+@media (max-width: 767px) {
+    .mobile-space {
+        margin-top: 20% !important;
+    }
+}
+
+@media (max-width: 800px) {
+    .laptop-space {
+        margin-top: 30% !important;
+    }
+}
+
+.hellofooter {
+    position: fixed;
+    bottom: 0;
+}
+
+.table-no-border {
+    border: none !important;
+}
+
+.table-no-space {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+}
+
+.theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+    border-color: #ff9800;
+}
+
+.theme--light.v-data-table
+    .v-data-table-header
+    th.sortable
+    .v-data-table-header__icon {
+    color: white;
+}
+
+.theme--light.v-data-table
+    .v-data-table-header
+    th.sortable.active
+    .v-data-table-header__icon {
+    color: white;
+}
+
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > td,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
+    font-family: "Trebuchet MS" !important;
+    font-size: 15px !important;
+    color: #666666;
+    height: 48px;
+}
+
+.theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+    background-color: #20778b;
+    color: white !important;
+}
+
+/* .theme--light.v-icon {
+    color: white;
+} */
+
+/* .v-simple-checkbox {
+    align-self: center;
+    line-height: normal;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    color: black !important;
+} */
+
+.card {
+    border: 0;
+    -webkit-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .07), 0 4px 6px -2px rgba(0, 0, 0, .05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .07), 0 4px 6px -2px rgba(0, 0, 0, .05);
+}
+
+.theme--light.v-data-table tbody tr:nth-of-type(even) {
+    background-color: rgba(0, 0, 0, .03);
+}
+
+.theme--light.v-date-picker-table .v-date-picker-table--date__week, .theme--light.v-date-picker-table th {
+    color: gray;
+}
+
+thead {
+    background-color: transparent;
+}

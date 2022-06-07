@@ -1,0 +1,70 @@
+@media print {
+    .tablebgcol {
+background-color: #20778b !important; 
+color-adjust: exact !important;
+-webkit-print-color-adjust: exact;
+},
+
+.box-text {
+    font-size: 14px !important; 
+    color: white !important;
+	background-color: #20778b !important;
+    -webkit-print-color-adjust: exact !important;
+}
+
+.pr_logo {
+    background-image: url(../../../images/bandari.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: block;
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+    color-adjust: exact !important;  
+}
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+    color-adjust: exact !important;  
+}
+
+
+	
+@page { 
+        margin-top: 0; 
+        margin-bottom: 0; 
+    } 
+
+body {
+ -webkit-print-color-adjust: exact;
+   padding-top: 72px; 
+   padding-bottom: 72px; 
+}
+
+
+table {
+border: 2px solid #dee2e6 !important;
+}
+
+td {
+border: 2px solid #dee2e6 !important;
+}
+
+th {
+border: 2px solid #dee2e6 !important;
+}
+
+
+
+}
+
+@media screen {
+    
+body {
+  -webkit-print-color-adjust: exact !important;
+},
+
+.tablebgcol {
+background-color: #20778b; 
+-webkit-print-color-adjust: exact;
+color-adjust: exact !important;
+},
+    
+    
+}
