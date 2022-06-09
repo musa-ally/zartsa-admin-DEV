@@ -82,12 +82,138 @@
                         </select>
                         <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('gender') {{ $message }} @enderror</div>
                     </div>
+
+                     <div class="col form-group mb-4">
+                        <select name="role" id="role" class="form-control" required onchange="getPermissions()">
+                            <option value="">Choose role...</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('role') {{ $message }} @enderror</div>
+                    </div>
                 </div>
-                <div>
+
+                
                     <button class="btn btn-outline-dark btn-lg px-5" type="submit">Update user</button>
-                </div>
+
+                  
             </div>
         </form>
+
+         {{-- <form method="POST" action="{{ route('user.edit', [$id]) }}" class="needs-validation" novalidate>
+            @csrf
+            @method('PUT')
+            <div class="card" style="padding: 20px">
+                <h5>Edit user: {{ $user->username }}</h5>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typeFName">First name *</label>
+                            <input type="text" id="typeFName" class="form-control" name="first_name" value="{{ $user->first_name }}" required autocomplete="first_name"/>
+                            <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('first_name') {{ $message }} @enderror</div>
+                            @error('first_name')
+                            <span class="text-danger error">{{ $message }}</span>
+                        @enderror
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typeLName">Last name *</label>
+                            <input type="text" id="typeLName" class="form-control" name="last_name" value="{{ $user->last_name }}" required autocomplete="last_name"/>
+                            <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">
+                                @error('last_name')
+                                <span class="text-danger error">{{ $message }}</span>
+                            @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typename">Username *</label>
+                            <input type="text" id="typeuname" class="form-control" name="username" value="{{ $user->username }}" required autocomplete="username"/>
+                            <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('username') {{ $message }} @enderror</div>
+                            @error('username')
+                            <span class="text-danger error">{{ $message }}</span>
+                        @enderror
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typeEmail">Email *</label>
+                            <input type="email" id="typeEmail" value="{{ $user->email }}" name="email" class="form-control" required/>
+                            @error('email')
+                            <span class="text-danger error">{{ $message }}</span>
+                        @enderror
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typePhone">Phone number *</label>
+                            <input type="text" id="typePhone" class="form-control" maxlength="10" name="phone_number" value="{{ $user->phone_number }}" required autocomplete="phone_number"/>
+                            @error('phone_number')
+                            <span class="text-danger error">{{ $message }}</span>
+                        @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="form-group col mb-4">
+                        <label class="form-label" for="type">Select Identification Type *</label>
+                        <select name="id_types_id" id="id_types_id" class="form-control" required>
+                            @foreach($id_types as $id_type)
+                                @if($id_type->id == $user->id_types_id)
+                                    <option value="{{ $id_type->id }}" selected>{{ $id_type->name }}</option>
+                                @else
+                                    <option value="{{ $id_type->id }}">{{ $id_type->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('id_types_id') {{ $message }} @enderror</div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="typeIdNo">ID Number *</label>
+                        
+                            <input type="text" id="typeIdNo" class="form-control" name="id_number" value="{{ $user->id_number }}" required autocomplete="id_number"/>
+                            @error('id_number')
+                            <span class="text-danger error">{{ $message }}</span>
+                        @enderror
+                        </div>
+                    </div>
+                    <div class="col form-group">
+                        <label class="form-label" for="typeGender">Select Gender *</label>
+                        <select name="gender" id="gender" class="form-control" required>
+                            @if($user->gender == 'M')
+                                <option value="M" selected>Male</option>
+                                <option value="F">Female</option>
+                            @else
+                                <option value="M">Male</option>
+                                <option value="F" selected>Female</option>
+                            @endif
+                        </select>
+                        <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">@error('gender') {{ $message }} @enderror</div>
+                    </div>
+
+                     <div class="col form-group mb-2">
+                        <label class="form-label" for="typeRole">Choose Role *</label>
+                        <select name="role" id="role" class="form-control" required onchange="getPermissions()">
+                            <option value="">Choose role...</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">
+                        </div>
+                    </div>
+                </div>
+
+                
+                    <button class="btn btn-outline-dark btn-lg px-5" type="submit">Update user</button>
+
+                  
+            </div>
+        </form> --}}
     </div>
 
     <!-- MDB -->

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendRegistrationEmail;
 use App\Models\IdType;
 use App\Models\InternalUserRole;
 use App\Models\InternalUsersHasInternalUserRole;
@@ -127,7 +128,8 @@ class UserController extends Controller {
         return view('admin.users.create', compact('roles', 'id_types', 'permissions'));
     }
 
-	public function show($id){
+
+    public function show($id){
         if (!Auth::user()->hasPermission('view_user_profile')){
             return back()->withErrors(['You are not Authorized!']);
         }
@@ -136,28 +138,37 @@ class UserController extends Controller {
         $user_permissions = DB::select('call sp_get_user_permissions (?)', array(Crypt::decrypt($id)));
         $roles = DB::select('call sp_get_roles');
         $permissions = DB::select('call sp_get_permissions');
+
+        
+        // dd($permissions);
+        $permission_user = DB::select('call sp_get_user_with_permissions (?)', array(Crypt::decrypt($id)));
         $user = $user[0];
 
         $u_roles_filtered = [];
         foreach ($user_roles as $user_role) {
-            $u_roles_filtered[] = $user_role->role_id;
+            $u_roles_filtered[] = ['id'=> $user_role->role_id, 'name'=> $user_role->role_name];
+           
         }
 
         $u_permissions_filtered = [];
         foreach ($user_permissions as $user_permission) {
             $u_permissions_filtered[] = $user_permission->permission_id;
         }
-//        dd($u_permissions_filtered);
+
 
         AuditLog::store([
             'event_status' => 'SUCCESS',
             'event_type' => 'ViewItem',
             'user_id' => Auth::id(),
-            'description' => Auth::user()->username.' has viewed '.$user->username.' profile',
+            'description' => 'Has viewed '.$user->username.' profile',
             'table_name' => null,
             'row_id' => null
         ]);
-        return view('admin.users.show', compact('user', 'roles', 'permissions', 'u_roles_filtered', 'u_permissions_filtered'));
+
+      
+        $approves = is_dual_control_pending($user->account_status_code, $user->id, config('constants.dual_controls.create_new_user'));
+        
+        return view('admin.users.show', compact('user', 'roles','permission_user','permissions', 'u_roles_filtered', 'u_permissions_filtered','approves'));
     }
 
     public function searchUsers(Request $request){
@@ -222,6 +233,70 @@ class UserController extends Controller {
         return back()->withErrors(['Could not update user']);
     }
 
+  
+
+    public function editUser(Request $request, $id){
+        $user = User::query()->where('id', Crypt::decrypt($id))->first();
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required',
+            'email' => 'required',
+            'phone_number' => 'required',
+            'email' => 'unique:internal_users,email,'.$user->id,
+            'phone_number' =>  'unique:internal_users,phone_number,'.$user->id,
+            'gender' => 'required',
+        ]);
+
+        // $user = User::query()->where('id', Crypt::decrypt($id))->first();
+        $userRole = InternalUsersHasInternalUserRole::query()->where('internal_users_id',$user->id)->first();
+        $userRole->update([
+            'internal_user_roles_id' => $request->role,
+        ]);
+
+        if (!$user){
+            return back()->with(['message' => 'User does not exist']);
+        }
+        $oldFName = $user->first_name;
+        $oldLName = $user->last_name;
+        if ($user->update($request->all())){
+            AuditLog::store([
+                'event_status' => 'SUCCESS',
+                'event_type' => 'Edit',
+                'user_id' => Auth::id(),
+                'description' => 'Has updated profile of: '.$oldFName.' '.$oldLName,
+                'table_name' => null,
+                'row_id' => null
+            ]);
+            return back()->with(['message' => 'User information updated successfully']);
+        }
+
+        AuditLog::store([
+            'event_status' => 'FAILED',
+            'event_type' => 'Edit',
+            'user_id' => Auth::id(),
+            'description' => 'Has failed to update user profile',
+            'table_name' => null,
+            'row_id' => null
+        ]);
+        return back()->withErrors(['Could not update user']);
+
+    }
+
+    public function editUserView($id){
+        if (!Auth::user()->hasPermission('edit_user')){
+            return back()->withErrors(['You are not Authorized!']);
+        }
+        $user = User::find(Crypt::decrypt($id));
+        $roles = InternalUserRole::all();
+
+        if (!$user){
+            return back()->withErrors(['User does not exist']);
+        }
+        $id_types = IdType::all();
+        return view('admin.users.edit', compact('id', 'id_types', 'user','roles'));
+    }
+
     public function toggleBlock(Request $request){
         if (!Auth::user()->hasPermission('block_user')){
             return back()->withErrors(['You are not Authorized!']);
@@ -254,7 +329,7 @@ class UserController extends Controller {
                         'event_status' => 'SUCCESS',
                         'event_type' => 'Block',
                         'user_id' => Auth::id(),
-                        'description' => Auth::user()->username.' has successfully blocked '.$user->username,
+                        'description' => 'Has successfully blocked '.$user->username,
                         'table_name' => null,
                         'row_id' => null
                     ]);
@@ -270,10 +345,145 @@ class UserController extends Controller {
             'event_status' => 'FAILED',
             'event_type' => 'Block',
             'user_id' => Auth::id(),
-            'description' => Auth::user()->username.' has failed to block '.$user->username,
+            'description' => 'Has failed to block '.$user->username,
             'table_name' => null,
             'row_id' => null
         ]);
         return back()->withErrors(['Operation failed']);
     }
+
+    public function sendEmail(Request $request){
+        $request->validate([
+            'email' => 'required',
+            'message' => 'required'
+        ]);
+    }
+
+    public function makeApprover(Request $request){
+        $request->validate([
+            'user_id' => 'required',
+            'action' => 'required',
+        ]);
+
+        $user = User::query()->lockForUpdate()->find($request['user_id']);
+        if (!$user){
+            AuditLog::store([
+                'event_status' => 'FAILED',
+                'event_type' => 'Edit',
+                'user_id' => Auth::id(),
+                'description' => 'Attempted to make/remove user as approver',
+                'table_name' => null,
+                'row_id' => null
+            ]);
+            return back()->withErrors(['User does not exist']);
+        }
+        if (!$user->update(['is_approver' => $request['action']])){
+            AuditLog::store([
+                'event_status' => 'FAILED',
+                'event_type' => 'Edit',
+                'user_id' => Auth::id(),
+                'description' => 'Attempted to make/remove '.$user->username.' as approver',
+                'table_name' => null,
+                'row_id' => null
+            ]);
+            return back()->withErrors(['Could not update user']);
+        }
+        $message = 'Has made '.$user->username.' as Approver';
+        if ($request['action'] == 0){
+            $message = 'Has removed '.$user->username.' as Approver';
+        }
+        AuditLog::store([
+            'event_status' => 'SUCCESS',
+            'event_type' => 'Edit',
+            'user_id' => Auth::id(),
+            'description' => $message,
+            'table_name' => null,
+            'row_id' => null
+        ]);
+        return back()->with(['message' => 'User approve permission changed']);
+    }
+
+    public function approveUser(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required',
+           ]);
+
+        $user = User::query()->where('id',$request->user_id)->first();
+        $password = $this->randomPassword();
+
+        if (!$user){
+            AuditLog::store([
+                'event_status' => 'FAILED',
+                'event_type' => 'Edit',
+                'user_id' => Auth::id(),
+                'description' => 'Attempted to approve user',
+                'table_name' => null,
+                'row_id' => null
+            ]);
+            return back()->withErrors(['User does not exist']);
+        }
+        $user->update(['account_status_code' => 'AC001','password' => Hash::make($password),
+          ]);
+        
+        $full_name = $user->first_name.' '.$user->last_name;
+        SendRegistrationEmail::dispatch($full_name, $user->username, $user->email, $password);
+        Log::info('====  send registration email to user. =====');
+        $message = 'Has approved '.$user->username.'';
+        AuditLog::store([
+            'event_status' => 'SUCCESS',
+            'event_type' => 'Edit',
+            'user_id' => Auth::id(),
+            'description' => $message,
+            'table_name' => null,
+            'row_id' => null
+        ]);
+        return back()->with(['message' => 'User has approved succesful']);
+    }
+
+    public function rejectUser(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required',
+        ]);
+
+        $user = User::query()->where('id',$request->user_id)->first();
+        if (!$user){
+            AuditLog::store([
+                'event_status' => 'FAILED',
+                'event_type' => 'Edit',
+                'user_id' => Auth::id(),
+                'description' => 'Attempted to approve user',
+                'table_name' => null,
+                'row_id' => null
+            ]);
+            return back()->withErrors(['User does not exist']);
+        }
+        
+        $user->update(['account_status_code' => 'RJ001']);
+    
+        $message = 'Has approved '.$user->username.'';
+    
+        AuditLog::store([
+            'event_status' => 'SUCCESS',
+            'event_type' => 'Edit',
+            'user_id' => Auth::id(),
+            'description' => $message,
+            'table_name' => null,
+            'row_id' => null
+        ]);
+        return back()->with(['message' => 'User has rejected']);
+    }
+
+    function randomPassword() {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array();
+        $alphaLength = strlen($alphabet) - 1;
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+
 }

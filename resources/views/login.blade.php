@@ -11,26 +11,31 @@
                                 @csrf
                                 <div class="mt-md-4 pb-5">
 
-                                    <h2 class="fw-bold mb-3 text-uppercase">Login</h2>
-                                    @if(count($errors) > 0 )
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="login-alert">
-                                            <p>{{$errors->first()}}</p>
-                                        </div>
-                                        <br />
-                                    @endif
+                                    <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                                    <p class="text-white-50 mb-5">Please enter your username and password!</p>
 
+                                    <div class="text-start">
+                                        <label for="typeUsername">Username:</label>
+                                    </div>
+                                    
                                     <div class="form-outline form-white mb-4">
+                                        
                                         <input type="text" id="typeUsername"
                                                class="form-control @error('username') is-invalid @enderror"
                                                name="username" value="{{ old('username') }}" required
                                                autocomplete="username" autofocus  onkeyup="getUsername()"/>
-                                        <label class="form-label" for="typeUsername">Username</label>
+                                        {{-- <label class="form-label" for="typeUsername">Username</label> --}}
+                                        {{-- <div class="invalid-feedback"
+                                             style="white-space: nowrap;overflow: scroll">@error('username') {{ $message }} @enderror</div> --}}
                                     </div>
 
+                                    <div class="text-start">
+                                        <label  for="typePasswordX">Password:</label>
+                                    </div>
                                     <div class="form-outline form-white mb-4">
                                         <input type="password" id="typePasswordX" class="form-control" name="password"
                                                required autocomplete="current-password"/>
-                                        <label class="form-label" for="typePasswordX">Password</label>
+                                        {{-- <label class="form-label" for="typePasswordX">Password</label> --}}
                                     </div>
 
 <!--                                    <div class="form-outline form-white mb-4">

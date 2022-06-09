@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserOtpCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class TwoFAController extends Controller
@@ -15,6 +16,8 @@ class TwoFAController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
+
+
 
     public function show2fa(Request $request){
 //        check if latest otp code for this user has expired
@@ -33,18 +36,24 @@ class TwoFAController extends Controller
             'token'=>'required',
         ]);
 
-        $otp = UserOtpCode::query()->where(['user_id' => auth()->user()->id, 'user_type' => 'I'])
-            ->where('code', $request->token)
-            ->first();
+        $otp = UserOtpCode::query()->where(['user_id' => auth()->user()->id, 'user_type' => 'I'])->first();
+          
 
-        if ($otp) {
+        if($otp && Hash::check($request->token, $otp->code))
+         {
             if ($otp->updated_at >= now()->subMinutes(2)){
                 Session::put('user_2fa', auth()->user()->id);
                 if (auth()->user()->hasRole('super_admin')) {
                     return redirect()->to('home');
-                }else if (auth()->user()->hasRole('staff')){
-                    return redirect()->route('staff.dashboard');
-                }else{
+                } else if (auth()->user()->hasRole('admin')) {
+                    return redirect()->to('home');
+                } else if (
+                    auth()->user()->hasRole('staff')
+                    || auth()->user()->hasRole('inspector')
+                  
+                ) {
+                    return redirect()->to('applications');
+                } else {
                     return 'error';
                 }
             }
@@ -53,6 +62,8 @@ class TwoFAController extends Controller
 
         return back()->withErrors(['You have entered a wrong code']);
     }
+
+   
 
     public function resend2fa(){
         auth()->user()->generateCode();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ZmCore;
 use App\Jobs\SendOTPEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use App\Jobs\SendOTPSMS;
+use Illuminate\Support\Facades\Hash;
+use \DateTimeInterface;
 
 class User extends Authenticatable
 {
@@ -43,6 +46,7 @@ class User extends Authenticatable
         'gender',
         'account_status_code',
         'password',
+        'is_approver'
     ];
 
     /**
@@ -68,6 +72,12 @@ class User extends Authenticatable
      * @param $name
      * @return bool
      */
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
     public function hasRole($name){
         $role = DB::select('call sp_check_user_has_role (?,?)', array(Auth::id(), $name));
         return $role[0]->status_code == 300;
@@ -78,18 +88,27 @@ class User extends Authenticatable
         return $permission[0]->status_code == 300;
     }
 
+    public function status(){
+        return $this->belongsTo(AccountStatus::class, 'account_status_code', 'code');
+    }
+
     public function generateCode(){
         $code = rand(1000, 9999);
-        //$code = 1234;
-        UserOtpCode::updateOrCreate(
-            [ 'user_id' => auth()->user()->id ],
-            [ 'code' => $code ],
-            [ 'user_type' => 'I' ]
-        );
+       
+        $user_otp = UserOtpCode::query()->where(['user_id' => auth()->id(), 'user_type' => 'I'])->first();
+        
+        if ($user_otp){
+            $user_otp->update(['code' => Hash::make($code)]);
+        }else{
+            UserOtpCode::create(['user_id' => auth()->id(), 'code' => Hash::make($code), 'user_type' => 'I']);
+        }
 
-        SendOTPSMS::dispatch($code, Auth::user()->first_name, Auth::user()->phone_number);
-//        send email to user
-        Log::info('AUTH EMAIL: '.Auth::user()->email);
-        SendOTPEmail::dispatch($code, Auth::user()->email, Auth::user()->username);
+        // send message to user
+        SendOTPSMS::dispatch($code, Auth::user()->first_name, ZmCore::formatPhone(Auth::user()->phone_number));;
+        Log::info('send OTP to user ===');
+        // send email to user
+        if(config('app.env') == 'production') {
+            SendOTPEmail::dispatch($code, Auth::user()->email, Auth::user()->username);;
+        }
     }
 }

@@ -53,6 +53,9 @@ Route::middleware(['2fa'])->group(function () {
     Route::post('users/update',  [UserController::class, 'update'])->name('user.update');
     Route::get('users/search',  [UserController::class, 'searchUsers'])->name('user.search');
     Route::put('user/toggle-block', [UserController::class, 'toggleBlock'])->name('user.block.toggle');
+    Route::get('user/edit/{id}', [UserController::class, 'editUserView'])->name('user.edit.view');
+    Route::put('user/edit/{id}', [UserController::class, 'editUser'])->name('user.edit');
+    Route::post('user/email', [UserController::class, 'sendEmail'])->name('user.email');
     Route::get('error', function (){
         $code = 401;
         return view('custom_error_page', compact('code'));
@@ -72,6 +75,7 @@ Route::middleware(['2fa'])->group(function () {
     Route::get('role/search', [RolesPermissionController::class, 'searchRoles'])->name('role.search');
     Route::get('permission/search', [RolesPermissionController::class, 'searchPermissions'])->name('permission.search');
     Route::post('permission/add-remove', [RolesPermissionController::class, 'addRemovePermissionToRole'])->name('permission.add_remove');
+    Route::post('user-permission/add-remove', [RolesPermissionController::class, 'addRemovePermissionToUser'])->name('permission.user.add_remove');
 
 
 //    ====================== IDENTIFICATIONS ==================== //

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\DualControlApproval;
+use App\Models\DualControlTask;
 use Illuminate\Support\MessageBag;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -44,5 +46,30 @@ if (!function_exists('zpc_abort')){
 if (! function_exists('zpc_failure_response')) {
     function zpc_failure_response(string $message,int $http_status = 400) {
         return response(['status'=>'failed','message'=>$message],$http_status);
+    }
+}
+
+
+if (!function_exists('is_dual_control_active')){
+    function is_dual_control_active(string $code){
+        $control = DualControlTask::query()->where('code', $code)->first();
+        return $control && $control->is_active;
+    }
+}
+
+if (!function_exists('is_dual_control_pending')){
+    function is_dual_control_pending(string $code, int $id, string $dual_code){
+        $approves = [];
+        if ($code == 'PE001') {
+            $approval = DualControlApproval::query()->where([
+                'object_id' => $id,
+                'dual_control_task_code' => $dual_code,
+                'status' => 'PENDING'
+            ])->first();
+            if ($approval->approvers != null){
+                $approves = json_decode($approval->approvers);
+            }
+        }
+        return $approves;
     }
 }
