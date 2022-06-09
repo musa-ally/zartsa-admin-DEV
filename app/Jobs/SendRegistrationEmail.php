@@ -36,6 +36,7 @@ class SendRegistrationEmail implements ShouldQueue
         $this->full_name = $_full_name;
         $this->username = $_username;
         $this->password = $_password;
+        
         $this->email = $_email;
 
         // $this->onQueue('registration_mails');
